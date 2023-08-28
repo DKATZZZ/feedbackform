@@ -1,0 +1,9 @@
+/* Success.css */
+.successContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;  /* or whatever fits your design */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}

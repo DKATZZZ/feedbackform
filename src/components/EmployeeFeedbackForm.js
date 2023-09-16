@@ -81,7 +81,7 @@ handleInputChange = (event) => {
 
     switch (name) {
         case 'employee_id':
-          errors.employee_id = sanitizedValue.length < 5 ? 'Employee Id atleast have 5 characters' : '';
+          errors.employee_id = sanitizedValue.length < 5 ? 'Employee Id atleast have 4 characters' : '';
         break;
         case 'name':
             errors.name = sanitizedValue.length < 3 ? 'Name must be at least 3 characters!' : '';
@@ -165,7 +165,7 @@ handleSubmit = async (e) => {
         return <Spinner />;
     }
 
-     if (this.state.submitted === true) {
+     if (this.state.submitted) {
             return <Success />;
         }
     return (

@@ -1,6 +1,8 @@
+/* eslint-disable no-undef */
 import React, { Component } from 'react';
 
 import Spinner from './spinner.js';
+import Success from './Success.js';
 
 
 const styles = {
@@ -36,31 +38,39 @@ const styles = {
     }
 };
 
+
 class FeedbackForm extends Component {
 //   
+
 constructor(props) {
     super(props);
     this.state = {
+        employee_id:'',
         name: '',
         email: '',
         phone: '',
         comments: '',
         original: {
+            employee_id:'',
             name: '',
             email: '',
             phone: '',
             comments: ''
         },
         errors: {
+            employee_id:'',
             name: '',
             email: '',
             phone: '',
             comments: ''
         },
         loading: false,
-        success: false
+        success: false,
+        submitted:false
     };
 }
+
+
 
 handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -70,6 +80,9 @@ handleInputChange = (event) => {
     const sanitizedValue = value.replace(/[<>]/g, '');
 
     switch (name) {
+        case 'employee_id':
+          errors.employee_id = sanitizedValue.length < 5 ? 'Employee Id atleast have 5 characters' : '';
+        break;
         case 'name':
             errors.name = sanitizedValue.length < 3 ? 'Name must be at least 3 characters!' : '';
             break;
@@ -92,8 +105,8 @@ handleInputChange = (event) => {
 };
 
 isButtonDisabled = () => {
-    const { name, email, phone, comments, original } = this.state;
-    if (name === original.name && email === original.email && phone === original.phone && comments === original.comments) {
+    const { employee_id,name, email, phone, comments, original } = this.state;
+    if (employee_id === original.employee_id && name === original.name && email === original.email && phone === original.phone && comments === original.comments) {
         return true;
     }
     return false;
@@ -109,6 +122,7 @@ handleSubmit = async (e) => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+                employee_Id:this.state.employee_id,
                 name: this.state.name,
                 email: this.state.email,
                 phone: this.state.phone,
@@ -120,6 +134,7 @@ handleSubmit = async (e) => {
             this.setState({
                 success: true,
                 original: {
+                    employee_Id:this.state.employee_id,
                     name: this.state.name,
                     email: this.state.email,
                     phone: this.state.phone,
@@ -136,6 +151,7 @@ handleSubmit = async (e) => {
     this.setState({ loading: false });
        // Clear the form by resetting the state
        this.setState({
+        employee_id:'',
         name: '',
         email: '',
         phone: '',
@@ -144,12 +160,31 @@ handleSubmit = async (e) => {
 };
   render() {
     const { errors } = this.state;
+
+    if (this.state.loading) {
+        return <Spinner />;
+    }
+
+     if (this.state.submitted === true) {
+            return <Success />;
+        }
     return (
       <div className="form-container">
          <div>
             <h1>Employee Feedback</h1>
          </div>
         <form onSubmit={this.handleSubmit} style={styles.form}>
+            <div className='input-group'>
+                <label style={styles.label}>Employee ID</label>
+                <input
+                 type='text'
+                 name='employee_id'
+                 onChange={this.handleInputChange}
+                 value={this.state.employee_id}
+                 style={styles.input}
+                 />
+                 {errors.employee_id && <span className='error'>{errors.employee_id}</span>}
+            </div>
           <div className="input-group">
             <label style={styles.label}>Name:</label>
             <input
